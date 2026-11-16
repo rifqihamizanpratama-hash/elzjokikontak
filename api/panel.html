@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel ELZ PUSH KONTAK</title>
+<style>
+:root{--bg:#f4f4f2;--card:#fff;--ink:#0d0d0d;--mute:#777;--acc:#25d366}
+@media (prefers-color-scheme:dark){:root{--bg:#121212;--card:#1d1d1d;--ink:#f2f2f2;--mute:#999}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,sans-serif;padding:16px}
+.card{background:var(--card);border:2px solid var(--ink);border-radius:18px;padding:16px;margin-bottom:14px}
+label{display:block;font-size:12px;letter-spacing:2px;color:var(--mute);margin-bottom:6px}
+input,textarea{width:100%;font:inherit;padding:10px;border:2px solid var(--ink);border-radius:12px;background:transparent;color:var(--ink)}
+textarea{min-height:110px}
+button{font:inherit;font-weight:700;padding:11px 14px;border:2px solid var(--ink);border-radius:12px;background:var(--card);color:var(--ink);cursor:pointer;margin-top:8px}
+button.p{background:var(--acc);color:#000}.row{display:flex;gap:8px;flex-wrap:wrap}.info{color:var(--mute);font-size:14px;margin-top:8px}
+</style></head><body>
+<h2>PANEL</h2>
+<div class="card"><label>PASSWORD</label><input id="pw" type="password"><button class="p" id="login">Masuk</button><div class="info" id="err"></div></div>
+<div id="app" style="display:none">
+  <div class="card"><label>STATUS</label><div id="st">-</div></div>
+  <div class="card"><label>TAMBAH NOMOR (SATU BARIS SATU NOMOR)</label><textarea id="nums"></textarea><button class="p" id="add">Tambah</button><div class="info" id="ai"></div></div>
+  <div class="card"><label>PESAN</label><textarea id="m"></textarea><button class="p" id="sm">Simpan pesan</button></div>
+  <div class="card"><label>LAINNYA</label><div class="row"><button id="rs">Mulai ulang dari awal</button><button id="cl">Hapus semua nomor</button></div></div>
+</div>
+<script>
+var pass="",$=function(i){return document.getElementById(i)};
+function api(p,b){b=b||{};b.pass=pass;return fetch("/api/"+p,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)}).then(function(r){return r.json()})}
+function show(d){$("st").textContent="Total "+d.total+" | Terkirim "+d.sent+" | Sisa "+d.left;if(d.msg!==undefined&&document.activeElement!==$("m"))$("m").value=d.msg}
+function login(){pass=$("pw").value;api("admin").then(function(d){
+  if(d.ok){$("app").style.display="block";$("err").textContent="";show(d);try{sessionStorage.setItem("p",pass)}catch(e){}}
+  else $("err").textContent=d.error||"Gagal"}).catch(function(){$("err").textContent="Gagal terhubung"})}
+$("login").onclick=login;
+$("add").onclick=function(){api("add",{numbers:$("nums").value}).then(function(d){if(d.ok){$("nums").value="";$("ai").textContent=d.added+" nomor ditambahkan.";show(d)}})};
+$("sm").onclick=function(){api("setmsg",{msg:$("m").value}).then(show)};
+$("rs").onclick=function(){if(confirm("Mulai ulang dari nomor pertama?"))api("restart").then(show)};
+$("cl").onclick=function(){if(confirm("Hapus semua nomor?"))api("clear").then(show)};
+try{var p=sessionStorage.getItem("p");if(p){$("pw").value=p;login()}}catch(e){}
+</script></body></html>

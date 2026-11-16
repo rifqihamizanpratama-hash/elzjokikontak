@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ELZ PUSH KONTAK</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f4f2;--card:#fff;--ink:#0d0d0d;--mute:#8a8a8a;--g1:#fff;--g2:#b9b9b9;--g3:#f2f2f2;--blue:#1a3cff}
+:root[data-theme=dark]{--bg:#141414;--card:#1e1e1e;--ink:#f2f2f2;--mute:#9a9a9a;--g1:#3a3a3a;--g2:#1a1a1a;--g3:#2c2c2c;--blue:#6f8aff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Rubik,system-ui,sans-serif}
+.wrap{max-width:480px;margin:0 auto}
+.top{background:var(--card);padding:22px 16px 18px}
+h1{margin:0 0 16px;font-size:32px;font-weight:900;letter-spacing:1px;line-height:1;
+  background:linear-gradient(180deg,#fff 0%,#9a9a9a 55%,#e8e8e8 100%);-webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;-webkit-text-stroke:3px var(--ink);paint-order:stroke fill}
+.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.clock{font-family:"Space Mono",monospace;color:var(--mute);font-size:15px}
+.pill{font:inherit;font-weight:500;font-size:15px;display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border:2px solid var(--ink);border-radius:999px;background:var(--card);color:var(--ink);cursor:pointer;text-decoration:none}
+.pill.blue{color:var(--blue)}
+.drip{position:relative;height:56px;background:var(--bg)}
+.drip:before{content:"";position:absolute;left:0;right:0;top:0;height:12px;background:var(--ink)}
+.drip i{position:absolute;top:10px;width:7px;background:var(--ink);border-radius:0 0 6px 6px}
+.main{padding:8px 16px 40px}
+.card{background:var(--card);border:3px solid var(--ink);border-radius:32px;box-shadow:14px 14px 0 var(--ink);margin:0 14px 34px 0;overflow:hidden}
+.ch{padding:16px 18px;background:linear-gradient(180deg,var(--g1),var(--g2) 60%,var(--g3));border-bottom:3px solid var(--ink);display:flex;align-items:center;gap:12px}
+.badge{width:38px;height:38px;border:3px solid var(--ink);border-radius:50%;display:grid;place-items:center;font-weight:900;background:var(--card)}
+.ct{font-family:"Space Mono",monospace;font-weight:700;letter-spacing:4px;font-size:15px}
+.body{padding:18px;min-height:150px;font-size:22px;font-weight:500;line-height:1.3;text-transform:uppercase;word-break:break-word}
+.foot{padding:0 18px 14px;display:flex;justify-content:space-between;gap:8px;font-family:"Space Mono",monospace;color:var(--mute);font-size:13px;letter-spacing:1px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:18px 18px 8px}
+.btn{font:inherit;font-weight:700;font-size:20px;letter-spacing:1px;display:flex;align-items:center;justify-content:center;gap:10px;height:84px;border:3px solid var(--ink);border-radius:28px;background:linear-gradient(180deg,var(--g1),var(--g2) 55%,var(--g3));color:var(--ink);cursor:pointer;text-decoration:none;box-shadow:4px 4px 0 var(--ink)}
+.btn:disabled{opacity:.45;box-shadow:none}
+.cnt{flex-direction:column;gap:6px;cursor:default;box-shadow:none}
+.cnt small{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:3px}
+.cnt b{font-family:"Space Mono",monospace;font-size:22px;letter-spacing:4px}
+.grid2{display:grid;grid-template-columns:1.2fr 1fr;gap:12px;padding:6px 18px 20px}
+.btn.dark{background:var(--ink);color:var(--card);height:72px;font-size:17px;box-shadow:none}
+.btn.sm{height:72px;font-size:17px}
+.err{padding:0 18px 14px;color:#d33;font-size:14px;min-height:18px}
+.note{color:var(--mute);font-size:15px;line-height:1.6;text-align:center;padding:0 10px}
+.note b{color:var(--ink)}
+</style></head><body>
+<div class="wrap">
+  <div class="top">
+    <h1>ELZ PUSH KONTAK</h1>
+    <div class="bar">
+      <span class="clock" id="clk">--.--.--</span>
+      <button class="pill" id="theme" aria-label="Tema">☾</button>
+      <button class="pill" id="reload">↻ Muat ulang</button>
+      <a class="pill blue" id="chan" href="#" target="_blank" style="display:none">➤ Saluran WA</a>
+    </div>
+  </div>
+  <div class="drip" id="drip"></div>
+  <div class="main">
+    <div class="card">
+      <div class="ch"><span class="badge">1</span><span class="ct">PESAN SIARAN</span></div>
+      <div class="body" id="msgtxt">…</div>
+      <div class="foot"><span>dibaca ulang tiap tekan KIRIM</span><span id="len">0 karakter</span></div>
+    </div>
+    <div class="card">
+      <div class="grid">
+        <div class="btn cnt"><small id="cl">MEMUAT…</small><b id="cn">000</b></div>
+        <button class="btn" id="go" disabled>▶ KIRIM</button>
+      </div>
+      <div class="err" id="err"></div>
+      <div class="grid2" style="padding-top:0">
+        <a class="btn dark" id="adm" href="#" target="_blank">CHAT ADMIN</a>
+        <a class="btn sm" id="cs" href="#" target="_blank">CS</a>
+      </div>
+    </div>
+    <p class="note"><b>ELZ PUSH KONTAK</b> — satu tap = satu chat WhatsApp terbuka. Tekan kirim di WhatsApp, kembali ke sini, tap lagi untuk lanjut. Muat ulang = cek sisa terbaru.</p>
+  </div>
+</div>
+<script>
+// === ATUR LINK DI SINI ===
+var ADMIN_WA="6282357163061";   // nomor admin (format 62...)
+var CS_WA="6282357163061";      // nomor CS
+var CHANNEL_URL="";             // link saluran WA, kosongkan kalau tidak dipakai
+
+var $=function(i){return document.getElementById(i)};
+$("adm").href="https://wa.me/"+ADMIN_WA;
+$("cs").href="https://wa.me/"+CS_WA;
+if(CHANNEL_URL){$("chan").href=CHANNEL_URL;$("chan").style.display="inline-flex"}
+
+(function(){var xs=[4,14,26,38,50,64,76,88],hs=[28,16,40,18,32,44,20,36],d=$("drip");
+ xs.forEach(function(x,i){var e=document.createElement("i");e.style.left=x+"%";e.style.height=hs[i]+"px";d.appendChild(e)})})();
+
+function tick(){var n=new Date(),p=function(v){return String(v).padStart(2,"0")};$("clk").textContent=p(n.getHours())+"."+p(n.getMinutes())+"."+p(n.getSeconds())}
+setInterval(tick,1000);tick();
+
+function setTheme(t){document.documentElement.setAttribute("data-theme",t);$("theme").textContent=t==="dark"?"☀":"☾";try{localStorage.setItem("t",t)}catch(e){}}
+try{setTheme(localStorage.getItem("t")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light"))}catch(e){setTheme("light")}
+$("theme").onclick=function(){setTheme(document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark")};
+
+function api(p){return fetch("/api/"+p,{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"}).then(function(r){return r.json()})}
+function refresh(){
+  $("cl").textContent="MEMUAT…";
+  api("status").then(function(d){
+    $("msgtxt").textContent=d.msg||"";$("len").textContent=(d.msg||"").length+" karakter";
+    $("cl").textContent=d.total?("SISA DARI "+d.total):"BELUM ADA DATA";
+    $("cn").textContent=String(d.left||0).padStart(3,"0");
+    $("go").disabled=!d.left;
+  }).catch(function(){$("cl").textContent="GAGAL TERHUBUNG"});
+}
+$("reload").onclick=refresh;
+$("go").onclick=function(){
+  $("err").textContent="";$("go").disabled=true;
+  var w=window.open("","_blank");
+  api("next").then(function(d){
+    if(d.ok){if(w)w.location.href=d.url;else location.href=d.url}
+    else{if(w)w.close();$("err").textContent=d.error}
+    refresh();
+  }).catch(function(){if(w)w.close();$("err").textContent="Gagal terhubung.";refresh()});
+};
+refresh();
+</script></body></html>
