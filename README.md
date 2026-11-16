@@ -1,4 +1,4 @@
-# elzjokikontak1
+# elzjokikontakk
 
 Halaman kirim chat WhatsApp satu per satu (satu tap = satu chat terbuka).
 
